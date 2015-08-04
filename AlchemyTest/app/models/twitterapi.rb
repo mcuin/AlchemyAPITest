@@ -13,8 +13,23 @@ $twitter_client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
 end
 
-def twitterSearch() {
+def self.twitterSearch() 
+  $positive = 0
+  $negative = 0
+  $neutral = 0
   $client.search(:keyword, :result_type => "recent").take(sample).each do |tweet|
-    response = alchemyapi.sentiment("text", tweet.text)
+    response = alchemyapi.sentiment("text", tweet.text, {'sentiment'=>1})
     
-}
+    if response['status'] == 'OK'
+      for keyword in response['keywords']
+	if (keyword['sentiment']['type'].eql? "positive") 
+          $positive += 1
+        elsif (keywork['sentiment']['type'].eql? "negative")
+          $negative += 1
+        else 
+          $neutral += 1  
+      end
+    else
+      puts 'Error in keyword extraction call: ' + response['statusInfo']
+    end
+end
