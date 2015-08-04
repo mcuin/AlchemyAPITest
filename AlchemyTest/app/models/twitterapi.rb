@@ -1,11 +1,13 @@
 require ('dotenv')
 require './alchemyapi'
+require 'twitter'
 
 Dotenv.load(
-  File.expand_path("variables.env", __FILE__)
+  File.expand_path("../variables.env", __FILE__)
 )
 
-alchemyapi = AlchemyAPI.new()
+$alchemyapi = AlchemyAPI.new()
+
 $twitter_client = Twitter::REST::Client.new do |config|
   config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
   config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
@@ -13,23 +15,31 @@ $twitter_client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
 end
 
-def self.twitterSearch() 
-  $positive = 0
-  $negative = 0
-  $neutral = 0
-  $client.search(:keyword, :result_type => "recent").take(sample).each do |tweet|
-    response = alchemyapi.sentiment("text", tweet.text, {'sentiment'=>1})
-    
+def self.twitterSearch(keyword) 
+  $twitter_positive = 0
+  $twitter_negative = 0
+  $twitter_neutral = 0
+
+  begin
+  $twitter_client.search(keyword, :result_type => "recent").take(20).each do |tweet|
+    response = $alchemyapi.keywords("text", tweet.text, {'sentiment'=>1})
+    print tweet.text
     if response['status'] == 'OK'
       for keyword in response['keywords']
 	if (keyword['sentiment']['type'].eql? "positive") 
-          $positive += 1
-        elsif (keywork['sentiment']['type'].eql? "negative")
-          $negative += 1
+          $twitter_positive += 1
+        elsif (keyword['sentiment']['type'].eql? "negative")
+          $twitter_negative += 1
         else 
-          $neutral += 1  
+          $twitter_neutral += 1  
+        end
       end
     else
       puts 'Error in keyword extraction call: ' + response['statusInfo']
     end
+  end
+  rescue Twitter::Error
+    puts "Cannot connect to Twitter."
+    exit
+  end
 end
