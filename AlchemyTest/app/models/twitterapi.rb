@@ -16,6 +16,9 @@ $twitter_client = Twitter::REST::Client.new do |config|
 end
 
 def self.twitterSearch(keyword) 
+  @positive = 0
+  @negative = 0
+  @neutral = 0
   $twitter_positive = 0
   $twitter_negative = 0
   $twitter_neutral = 0
@@ -27,13 +30,28 @@ def self.twitterSearch(keyword)
     if response['status'] == 'OK'
       for keyword in response['keywords']
 	if (keyword['sentiment']['type'].eql? "positive") 
-          $twitter_positive += 1
+          @positive += 1
         elsif (keyword['sentiment']['type'].eql? "negative")
-          $twitter_negative += 1
-        else 
-          $twitter_neutral += 1  
+          @negative += 1
+        elsif (keyword['sentiment']['type'].eql? "neutral") 
+          @neutral += 1 
         end
       end
+   	
+	if (((@positive) > (@negative)) && ((@positive) > (@neutral))) 
+  	  $twitter_positive += 1
+	  puts "positive"
+  	elsif (((@negative) > (@positive)) && ((@negative) > (@neutral)))
+ 	  $twitter_negative += 1
+	  puts "negative"
+        elsif (((@neutral) > (@positive)) && ((@neutral) > (@negative))) 
+  	  $twitter_neutral += 1
+	  puts "neutral"
+        end
+
+	@positive = 0
+        @negative = 0
+        @neutral = 0
     else
       puts 'Error in keyword extraction call: ' + response['statusInfo']
     end
@@ -43,3 +61,5 @@ def self.twitterSearch(keyword)
     exit
   end
 end
+
+twitterSearch('alchemyapi')
