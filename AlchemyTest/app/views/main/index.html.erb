@@ -1,10 +1,13 @@
 <%= form_for :main do |sample| %>
   <p>
-    <%= sample.label :size %><br>
-    <%= sample.text_field :size %>
+    <%= sample.label :twitter_Size %><br>
+    <%= sample.text_field :twitter_Size %>
   </p>
+    <%= sample.label :stack_Overflow_Size %><br>
+    <%= sample.text_field :stack_Overflow_Size %>
+  <p>
   
   <p>
-    <%= sample.submit %>
+    <%= sample.submit("Search") %>
   </p>
 <% end %>
