@@ -2,8 +2,6 @@ Rails.application.routes.draw do
   
   root 'main#index'
 
-  post 'main/data'
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

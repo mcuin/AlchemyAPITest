@@ -1,14 +1,17 @@
-<%= form_for :main do |sample| %>
-  <p>
-    <%= sample.label :twitter_Size %><br>
-    <%= sample.text_field :twitter_Size %>
-  </p>
-    <%= sample.label :stack_Overflow_Size %><br>
-    <%= sample.text_field :stack_Overflow_Size %>
-  <p>
-  
-  <p>
-    <%= sample.submit("Search") %>
-  </p>
-<% end %>
 <%= search %>
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+</style>
+<%= javascript_include_tag "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" %>
+<%= javascript_include_tag "graphs.js" %>
+
+
+
