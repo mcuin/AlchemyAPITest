@@ -11,4 +11,3 @@
     <%= sample.submit("Search") %>
   </p>
 <% end %>
-<%= search %>

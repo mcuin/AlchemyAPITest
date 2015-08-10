@@ -1,4 +1,4 @@
-require_relative '../models/./twitterapi'
+require_relative './twitterapi'
 
 class MainController < ApplicationController
 
